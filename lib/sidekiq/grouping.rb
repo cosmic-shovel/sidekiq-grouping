@@ -1,8 +1,10 @@
+require "active_support"
 require "active_support/core_ext/string"
 require "active_support/configurable"
 require "active_support/core_ext/numeric/time"
 require "sidekiq/grouping/version"
 require "concurrent"
+require "sidekiq/grouping/railtie" if defined?(Rails)
 
 module Sidekiq::Grouping
   autoload :Config, "sidekiq/grouping/config"
