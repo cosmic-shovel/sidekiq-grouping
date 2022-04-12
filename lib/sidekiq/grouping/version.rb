@@ -1,5 +1,5 @@
 module Sidekiq
   module Grouping
-    VERSION = "1.0.10"
+    VERSION = "0.46.2"
   end
 end
