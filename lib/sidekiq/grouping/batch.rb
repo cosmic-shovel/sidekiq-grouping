@@ -30,8 +30,8 @@ module Sidekiq
       end
 
       def pluck_size
-        worker_class_options['batch_flush_size'] ||
-          chunk_size
+        worker_class_options['poll_size'] ||
+        Sidekiq::Grouping::Config.poll_size
       end
 
       def pluck
@@ -44,13 +44,17 @@ module Sidekiq
         chunk = pluck
         return unless chunk
 
+        bulk_args = []
+
         chunk.each_slice(chunk_size) do |subchunk|
-          Sidekiq::Client.push(
-            'class' => @worker_class,
-            'queue' => @queue,
-            'args' => [true, subchunk]
-          )
+          bulk_args << [true, subchunk]
         end
+
+        Sidekiq::Client.push_bulk(
+          "class" => @worker_class,
+          "queue" => @queue,
+          "args" => bulk_args,
+        )
         set_current_time_as_last
       end
 

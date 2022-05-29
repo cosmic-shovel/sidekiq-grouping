@@ -10,6 +10,10 @@ module Sidekiq::Grouping::Config
     options[:poll_interval] || 3
   end
 
+  config_accessor :poll_size do
+    options[:poll_size] || 1000
+  end
+
   # Maximum batch size
   config_accessor :max_batch_size do
     options[:max_batch_size] || 1000
