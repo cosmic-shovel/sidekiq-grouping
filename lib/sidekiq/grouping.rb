@@ -4,7 +4,7 @@ require "active_support/configurable"
 require "active_support/core_ext/numeric/time"
 require "sidekiq/grouping/version"
 require "concurrent"
-require "sidekiq/grouping/railtie" if defined?(Rails)
+require "sidekiq/grouping/railtie" if defined?(Rails::Railtie)
 
 module Sidekiq::Grouping
   autoload :Config, "sidekiq/grouping/config"
@@ -40,16 +40,3 @@ module Sidekiq::Grouping
   end
 end
 
-Sidekiq.configure_client do |config|
-  config.client_middleware do |chain|
-    chain.add Sidekiq::Grouping::Middleware
-  end
-end
-
-Sidekiq.configure_server do |config|
-  config.client_middleware do |chain|
-    chain.add Sidekiq::Grouping::Middleware
-  end
-end
-
-Sidekiq::Grouping.start! if Sidekiq.server?
