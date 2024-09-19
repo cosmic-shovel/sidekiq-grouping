@@ -57,4 +57,8 @@ Sidekiq.configure_server do |config|
   end
 end
 
-Sidekiq::Grouping.start! if Sidekiq.server?
+Sidekiq.configure_server do |config|
+  config.on(:leader) do
+    Sidekiq::Grouping.start!
+  end
+end
